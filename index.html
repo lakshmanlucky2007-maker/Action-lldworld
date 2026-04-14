@@ -1,0 +1,572 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0c10;--bg2:#0f1117;--bg3:#161b24;--bg4:#1d2330;
+    --accent:#00e5ff;--accent2:#7c4dff;--accent3:#00ffa3;
+    --text:#e8edf5;--muted:#7a8499;--border:#1e2738;
+    --card:#111520;
+  }
+  body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;font-size:14px;line-height:1.6}
+  .wrap{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+  
+  .hero{text-align:center;padding:3rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem}
+  .hero-badge{display:inline-block;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);color:var(--accent);font-family:'Space Mono',monospace;font-size:11px;padding:4px 14px;border-radius:20px;margin-bottom:1rem;letter-spacing:2px}
+  .hero h1{font-size:2.4rem;font-weight:600;letter-spacing:-0.5px;line-height:1.2;margin-bottom:0.75rem}
+  .hero h1 span{color:var(--accent)}
+  .hero p{color:var(--muted);font-size:15px;max-width:560px;margin:0 auto}
+
+  .section{margin-bottom:3rem}
+  .section-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:0.75rem;display:flex;align-items:center;gap:8px}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+  .section-title{font-size:1.3rem;font-weight:600;margin-bottom:1.25rem}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem}
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+  .card h3{font-size:13px;font-weight:600;margin-bottom:0.5rem;color:var(--accent)}
+  .card p{font-size:13px;color:var(--muted);line-height:1.7}
+
+  .arch-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .arch-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem;position:relative;overflow:hidden}
+  .arch-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+  .arch-card.cloud::before{background:linear-gradient(90deg,var(--accent2),var(--accent))}
+  .arch-card.comm::before{background:linear-gradient(90deg,var(--accent),var(--accent3))}
+  .arch-card.local::before{background:linear-gradient(90deg,var(--accent3),#ffeb3b)}
+  .arch-card h3{font-size:12px;font-weight:600;margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:1px}
+  .arch-card.cloud h3{color:var(--accent2)}
+  .arch-card.comm h3{color:var(--accent)}
+  .arch-card.local h3{color:var(--accent3)}
+  .arch-item{font-size:12px;color:var(--muted);padding:4px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+  .arch-item:last-child{border:none}
+  .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+  .dot.purple{background:var(--accent2)}
+  .dot.cyan{background:var(--accent)}
+  .dot.green{background:var(--accent3)}
+
+  .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+  .feature-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem}
+  .feature-card .icon{font-size:20px;margin-bottom:8px}
+  .feature-card h4{font-size:13px;font-weight:600;margin-bottom:4px}
+  .feature-card p{font-size:12px;color:var(--muted)}
+
+  .stack-section{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stack-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem}
+  .stack-card h4{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+  .tag{display:inline-block;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.15);color:var(--accent);font-size:11px;padding:3px 10px;border-radius:6px;margin:3px 3px 3px 0;font-family:'Space Mono',monospace}
+  .tag.purple{background:rgba(124,77,255,0.08);border-color:rgba(124,77,255,0.2);color:#b388ff}
+  .tag.green{background:rgba(0,255,163,0.07);border-color:rgba(0,255,163,0.15);color:var(--accent3)}
+  .tag.amber{background:rgba(255,193,7,0.07);border-color:rgba(255,193,7,0.15);color:#ffd54f}
+
+  .roadmap{display:grid;gap:0}
+  .phase{display:grid;grid-template-columns:140px 1fr;gap:0;position:relative}
+  .phase-time{padding:1rem 1.5rem 1rem 0;text-align:right}
+  .phase-time .period{font-family:'Space Mono',monospace;font-size:11px;color:var(--accent);font-weight:700}
+  .phase-time .label{font-size:11px;color:var(--muted)}
+  .phase-line{display:flex;flex-direction:column;align-items:center;padding:0 1.25rem;position:relative}
+  .phase-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);flex-shrink:0;margin-top:18px}
+  .phase-dot.active{background:var(--accent)}
+  .phase-dot.purple{border-color:var(--accent2)}
+  .phase-dot.green{border-color:var(--accent3)}
+  .phase-connector{flex:1;width:2px;background:var(--border);margin:4px 0}
+  .phase-content{padding:1rem 0 1.5rem}
+  .phase-content h4{font-size:13px;font-weight:600;margin-bottom:0.5rem}
+  .phase-content ul{list-style:none;padding:0}
+  .phase-content li{font-size:12px;color:var(--muted);padding:2px 0;display:flex;align-items:center;gap:6px}
+  .phase-content li::before{content:'—';color:var(--border)}
+
+  .biz-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .biz-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.1rem}
+  .biz-card h4{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+  .tier{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+  .tier:last-child{border:none}
+  .tier-name{font-size:13px;font-weight:500}
+  .tier-price{font-family:'Space Mono',monospace;font-size:13px;color:var(--accent)}
+
+  .agent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+  .agent-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+  .agent-card .status{font-size:10px;padding:2px 8px;border-radius:10px;margin-bottom:8px;display:inline-block;font-family:'Space Mono',monospace;letter-spacing:1px}
+  .status.v1{background:rgba(0,255,163,0.1);color:var(--accent3);border:1px solid rgba(0,255,163,0.2)}
+  .status.soon{background:rgba(0,229,255,0.08);color:var(--accent);border:1px solid rgba(0,229,255,0.15)}
+  .status.future{background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid var(--border)}
+  .agent-card h4{font-size:13px;font-weight:600;margin-bottom:4px}
+  .agent-card p{font-size:11px;color:var(--muted)}
+
+  .risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .risk-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem}
+  .risk-card .level{font-size:10px;padding:2px 8px;border-radius:8px;margin-bottom:8px;display:inline-block;font-family:'Space Mono',monospace}
+  .level.high{background:rgba(255,82,82,0.1);color:#ff5252;border:1px solid rgba(255,82,82,0.2)}
+  .level.med{background:rgba(255,193,7,0.1);color:#ffd54f;border:1px solid rgba(255,193,7,0.2)}
+  .risk-card h4{font-size:13px;font-weight:600;margin-bottom:4px}
+  .risk-card p{font-size:12px;color:var(--muted)}
+
+  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+  .team-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem}
+  .team-card .role{font-size:10px;color:var(--accent);font-family:'Space Mono',monospace;letter-spacing:1px;margin-bottom:6px}
+  .team-card h4{font-size:13px;font-weight:600;margin-bottom:6px}
+  .team-card li{font-size:11px;color:var(--muted);list-style:none;padding:2px 0}
+
+  .metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .metric{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+  .metric .val{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;color:var(--accent);margin-bottom:4px}
+  .metric .lbl{font-size:11px;color:var(--muted)}
+
+  .ux-flow{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding:0.5rem 0}
+  .ux-step{flex:1;min-width:130px;position:relative}
+  .ux-step:not(:last-child)::after{content:'→';position:absolute;right:-12px;top:18px;color:var(--muted);font-size:14px;z-index:1}
+  .ux-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem;margin:0 14px 0 0}
+  .ux-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);margin-bottom:6px}
+  .ux-box h5{font-size:12px;font-weight:600;margin-bottom:4px}
+  .ux-box p{font-size:11px;color:var(--muted)}
+
+  .diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .diff-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem}
+  .diff-card h4{font-size:13px;font-weight:600;margin-bottom:8px}
+  .diff-card li{font-size:12px;color:var(--muted);list-style:none;padding:3px 0;display:flex;gap:8px}
+  .diff-card li span.x{color:#ff5252}
+  .diff-card li span.check{color:var(--accent3)}
+
+  @media(max-width:600px){
+    .arch-grid,.stack-section,.biz-grid,.risk-grid,.diff-grid{grid-template-columns:1fr}
+    .metrics-grid{grid-template-columns:1fr 1fr}
+    .phase{grid-template-columns:100px 1fr}
+  }
+</style>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-badge">STARTUP BLUEPRINT</div>
+    <h1>ARIA — <span>AI Runtime Interface Agent</span></h1>
+    <p>A Jarvis-like AI execution layer that understands, plans, and runs tasks on your computer with full transparency.</p>
+  </div>
+
+  <!-- PRODUCT OVERVIEW -->
+  <div class="section">
+    <div class="section-label">01 — Product Overview</div>
+    <div class="card-grid">
+      <div class="card">
+        <h3>What it is</h3>
+        <p>A desktop AI agent that sits as an overlay on your machine. You give it natural language commands. It thinks in the cloud, executes locally, and shows you every step in real time.</p>
+      </div>
+      <div class="card">
+        <h3>Core problem solved</h3>
+        <p>People spend hours on repetitive digital tasks — organizing files, summarizing documents, preparing study material. ARIA collapses hours of manual work into a single command.</p>
+      </div>
+      <div class="card">
+        <h3>Vision</h3>
+        <p>An AI Operating System layer where users stop interacting with apps manually and instead instruct AI to manage their entire digital environment.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYSTEM ARCHITECTURE -->
+  <div class="section">
+    <div class="section-label">02 — System Architecture</div>
+    <div class="arch-grid">
+      <div class="arch-card cloud">
+        <h3>☁ Cloud Brain</h3>
+        <div class="arch-item"><span class="dot purple"></span>LLM Processing (GPT-4 / Claude)</div>
+        <div class="arch-item"><span class="dot purple"></span>Intent parsing & understanding</div>
+        <div class="arch-item"><span class="dot purple"></span>Task planning engine</div>
+        <div class="arch-item"><span class="dot purple"></span>Step-by-step decomposition</div>
+        <div class="arch-item"><span class="dot purple"></span>User memory & personalization</div>
+        <div class="arch-item"><span class="dot purple"></span>Future: fine-tuned custom LLMs</div>
+      </div>
+      <div class="arch-card comm">
+        <h3>⚡ Comm Layer</h3>
+        <div class="arch-item"><span class="dot cyan"></span>WebSocket real-time streaming</div>
+        <div class="arch-item"><span class="dot cyan"></span>Step-by-step update delivery</div>
+        <div class="arch-item"><span class="dot cyan"></span>Bidirectional cloud ↔ desktop</div>
+        <div class="arch-item"><span class="dot cyan"></span>Auth & session management</div>
+        <div class="arch-item"><span class="dot cyan"></span>Retry & error handling</div>
+        <div class="arch-item"><span class="dot cyan"></span>REST API for async tasks</div>
+      </div>
+      <div class="arch-card local">
+        <h3>🖥 Local Engine</h3>
+        <div class="arch-item"><span class="dot green"></span>File & folder access</div>
+        <div class="arch-item"><span class="dot green"></span>System resource execution</div>
+        <div class="arch-item"><span class="dot green"></span>Automation script runner</div>
+        <div class="arch-item"><span class="dot green"></span>PDF / doc processing</div>
+        <div class="arch-item"><span class="dot green"></span>Real-time feedback sender</div>
+        <div class="arch-item"><span class="dot green"></span>Floating UI overlay (Jarvis)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UX FLOW -->
+  <div class="section">
+    <div class="section-label">03 — User Experience Flow</div>
+    <div class="ux-flow">
+      <div class="ux-step">
+        <div class="ux-box">
+          <div class="ux-num">01</div>
+          <h5>User Command</h5>
+          <p>"Summarize this PDF and make exam questions"</p>
+        </div>
+      </div>
+      <div class="ux-step">
+        <div class="ux-box">
+          <div class="ux-num">02</div>
+          <h5>Cloud Processes</h5>
+          <p>Intent parsed, plan created, steps defined</p>
+        </div>
+      </div>
+      <div class="ux-step">
+        <div class="ux-box">
+          <div class="ux-num">03</div>
+          <h5>Plan Sent</h5>
+          <p>Step-by-step plan streamed to desktop agent</p>
+        </div>
+      </div>
+      <div class="ux-step">
+        <div class="ux-box">
+          <div class="ux-num">04</div>
+          <h5>Local Execution</h5>
+          <p>Agent reads file, extracts content, processes</p>
+        </div>
+      </div>
+      <div class="ux-step">
+        <div class="ux-box">
+          <div class="ux-num">05</div>
+          <h5>Live Updates</h5>
+          <p>"Reading… Extracting… Generating…" shown live</p>
+        </div>
+      </div>
+      <div class="ux-step">
+        <div class="ux-box">
+          <div class="ux-num">06</div>
+          <h5>Output + Reason</h5>
+          <p>Final result delivered with explanation</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE FEATURES -->
+  <div class="section">
+    <div class="section-label">04 — Core Product Features</div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon">📄</div>
+        <h4>PDF Summarization</h4>
+        <p>Drop any PDF, get a structured summary with key points, extracted in real time</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🎓</div>
+        <h4>Exam Mode</h4>
+        <p>Auto-generates questions and answers from study material, multiple formats</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📁</div>
+        <h4>File Organization</h4>
+        <p>AI sorts, renames, and structures files and folders based on content + intent</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🎯</div>
+        <h4>Live Step Display</h4>
+        <p>Every task shows reasoning steps in real time — full transparency, no black box</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🪟</div>
+        <h4>Floating Overlay UI</h4>
+        <p>Jarvis-style draggable panel — always accessible via shortcut or persistent</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🧠</div>
+        <h4>User Memory</h4>
+        <p>Remembers your preferences, past tasks, and personalizes over time</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGENT MODES -->
+  <div class="section">
+    <div class="section-label">05 — Agent Mode System</div>
+    <div class="agent-grid">
+      <div class="agent-card">
+        <div class="status v1">V1 — NOW</div>
+        <h4>Student Agent</h4>
+        <p>Summarize, quiz, organize study materials</p>
+      </div>
+      <div class="agent-card">
+        <div class="status soon">NEXT</div>
+        <h4>Dev Agent</h4>
+        <p>Code review, docs, repo management</p>
+      </div>
+      <div class="agent-card">
+        <div class="status soon">NEXT</div>
+        <h4>Productivity Agent</h4>
+        <p>Email, calendar, file workflows</p>
+      </div>
+      <div class="agent-card">
+        <div class="status future">FUTURE</div>
+        <h4>Creator Agent</h4>
+        <p>Content drafting, social, media</p>
+      </div>
+      <div class="agent-card">
+        <div class="status future">FUTURE</div>
+        <h4>Business Agent</h4>
+        <p>Reports, research, strategy tasks</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="section">
+    <div class="section-label">06 — Technology Stack</div>
+    <div class="stack-section">
+      <div class="stack-card">
+        <h4>Frontend / Desktop</h4>
+        <span class="tag">Electron</span>
+        <span class="tag">Tauri (alt)</span>
+        <span class="tag">React</span>
+        <span class="tag">TailwindCSS</span>
+        <span class="tag">WebSocket client</span>
+        <span class="tag">Node.js</span>
+      </div>
+      <div class="stack-card">
+        <h4>Cloud Backend</h4>
+        <span class="tag purple">FastAPI / Python</span>
+        <span class="tag purple">OpenAI / Anthropic API</span>
+        <span class="tag purple">WebSocket server</span>
+        <span class="tag purple">PostgreSQL</span>
+        <span class="tag purple">Redis</span>
+      </div>
+      <div class="stack-card">
+        <h4>Local Execution</h4>
+        <span class="tag green">Python scripts</span>
+        <span class="tag green">PyPDF2 / pdfplumber</span>
+        <span class="tag green">os / shutil / pathlib</span>
+        <span class="tag green">subprocess</span>
+        <span class="tag green">watchdog (file events)</span>
+      </div>
+      <div class="stack-card">
+        <h4>Infrastructure</h4>
+        <span class="tag amber">AWS / GCP</span>
+        <span class="tag amber">Docker</span>
+        <span class="tag amber">Supabase (auth + db)</span>
+        <span class="tag amber">Vercel (web)</span>
+        <span class="tag amber">GitHub Actions CI/CD</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUSINESS MODEL -->
+  <div class="section">
+    <div class="section-label">07 — Business Model</div>
+    <div class="biz-grid">
+      <div class="biz-card">
+        <h4>Subscription Tiers</h4>
+        <div class="tier"><span class="tier-name">Free</span><span class="tier-price">₹0 / mo</span></div>
+        <div class="tier"><span class="tier-name">Student Pro</span><span class="tier-price">₹199 / mo</span></div>
+        <div class="tier"><span class="tier-name">Power User</span><span class="tier-price">₹499 / mo</span></div>
+        <div class="tier"><span class="tier-name">Team / B2B</span><span class="tier-price">Custom</span></div>
+      </div>
+      <div class="biz-card">
+        <h4>Revenue Streams</h4>
+        <div class="tier"><span class="tier-name">Direct subscriptions</span><span class="tier-price" style="color:var(--accent3)">Primary</span></div>
+        <div class="tier"><span class="tier-name">University licensing</span><span class="tier-price" style="color:var(--accent3)">B2B</span></div>
+        <div class="tier"><span class="tier-name">EdTech white-label</span><span class="tier-price" style="color:var(--accent)">B2B2C</span></div>
+        <div class="tier"><span class="tier-name">API access (dev tier)</span><span class="tier-price" style="color:var(--accent)">Future</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY METRICS TO TARGET -->
+  <div class="section">
+    <div class="section-label">08 — Key Target Metrics</div>
+    <div class="metrics-grid">
+      <div class="metric"><div class="val">50</div><div class="lbl">Beta users (week 6)</div></div>
+      <div class="metric"><div class="val">40%</div><div class="lbl">Day-7 retention target</div></div>
+      <div class="metric"><div class="val">5%</div><div class="lbl">Free-to-paid conversion</div></div>
+      <div class="metric"><div class="val">₹199</div><div class="lbl">Entry price point</div></div>
+    </div>
+  </div>
+
+  <!-- DIFFERENTIATION -->
+  <div class="section">
+    <div class="section-label">09 — Differentiation</div>
+    <div class="diff-grid">
+      <div class="diff-card">
+        <h4>What others do</h4>
+        <ul>
+          <li><span class="x">✕</span> Return an answer, no explanation</li>
+          <li><span class="x">✕</span> Black box execution</li>
+          <li><span class="x">✕</span> No local file access</li>
+          <li><span class="x">✕</span> Generic, not personalized</li>
+          <li><span class="x">✕</span> Single task only</li>
+        </ul>
+      </div>
+      <div class="diff-card">
+        <h4>What ARIA does</h4>
+        <ul>
+          <li><span class="check">✓</span> Shows every reasoning step live</li>
+          <li><span class="check">✓</span> Full execution transparency</li>
+          <li><span class="check">✓</span> Accesses your actual local files</li>
+          <li><span class="check">✓</span> Learns your preferences over time</li>
+          <li><span class="check">✓</span> Multi-step workflow execution</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="section">
+    <div class="section-label">10 — Build Roadmap</div>
+    <div class="roadmap">
+      <div class="phase">
+        <div class="phase-time"><div class="period">WEEK 1-2</div><div class="label">Foundation</div></div>
+        <div class="phase-line"><div class="phase-dot active"></div><div class="phase-connector"></div></div>
+        <div class="phase-content">
+          <h4>Core MVP</h4>
+          <ul>
+            <li>PDF drop → summary + quiz output</li>
+            <li>Basic Electron app with UI panel</li>
+            <li>Cloud API integration (Claude / GPT-4)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-time"><div class="period">WEEK 3-4</div><div class="label">Live Steps</div></div>
+        <div class="phase-line"><div class="phase-dot"></div><div class="phase-connector"></div></div>
+        <div class="phase-content">
+          <h4>Transparency Layer</h4>
+          <ul>
+            <li>WebSocket streaming from cloud to desktop</li>
+            <li>Live step-by-step display in UI</li>
+            <li>File organization feature</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-time"><div class="period">MONTH 2</div><div class="label">Validation</div></div>
+        <div class="phase-line"><div class="phase-dot purple"></div><div class="phase-connector"></div></div>
+        <div class="phase-content">
+          <h4>Beta Launch</h4>
+          <ul>
+            <li>50 student beta users onboarded</li>
+            <li>User auth + memory system live</li>
+            <li>Usage analytics + feedback loop</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-time"><div class="period">MONTH 3-4</div><div class="label">Revenue</div></div>
+        <div class="phase-line"><div class="phase-dot purple"></div><div class="phase-connector"></div></div>
+        <div class="phase-content">
+          <h4>Monetization</h4>
+          <ul>
+            <li>Paid plans launched</li>
+            <li>University pilot outreach</li>
+            <li>Dev Agent mode started</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-time"><div class="period">MONTH 6+</div><div class="label">Platform</div></div>
+        <div class="phase-line"><div class="phase-dot green"></div></div>
+        <div class="phase-content">
+          <h4>Platform Expansion</h4>
+          <ul>
+            <li>3+ agent modes live</li>
+            <li>Custom LLM fine-tuning</li>
+            <li>B2B / enterprise deals</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEAM -->
+  <div class="section">
+    <div class="section-label">11 — Team Requirements</div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="role">FOUNDER / CEO</div>
+        <h4>Product + Vision</h4>
+        <ul>
+          <li>Product strategy</li>
+          <li>User interviews</li>
+          <li>Fundraising</li>
+          <li>GTM execution</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <div class="role">CORE HIRE #1</div>
+        <h4>Full-Stack Engineer</h4>
+        <ul>
+          <li>Electron/Tauri app</li>
+          <li>FastAPI backend</li>
+          <li>WebSocket infra</li>
+          <li>Local script runner</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <div class="role">CORE HIRE #2</div>
+        <h4>AI/ML Engineer</h4>
+        <ul>
+          <li>Prompt engineering</li>
+          <li>Task planner design</li>
+          <li>Memory systems</li>
+          <li>Fine-tuning (future)</li>
+        </ul>
+      </div>
+      <div class="team-card">
+        <div class="role">PART-TIME</div>
+        <h4>UI/UX Designer</h4>
+        <ul>
+          <li>Overlay UI design</li>
+          <li>Interaction design</li>
+          <li>Demo polish</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- RISKS -->
+  <div class="section">
+    <div class="section-label">12 — Risks & Mitigations</div>
+    <div class="risk-grid">
+      <div class="risk-card">
+        <div class="level high">HIGH</div>
+        <h4>Big Tech Competition</h4>
+        <p>OpenAI Operator, Copilot+ already exist. Mitigation: dominate a specific niche (students, India) before they do.</p>
+      </div>
+      <div class="risk-card">
+        <div class="level high">HIGH</div>
+        <h4>User Trust / Permissions</h4>
+        <p>Local system access is a big ask. Mitigation: open-source local agent, clear permission scopes, no data upload.</p>
+      </div>
+      <div class="risk-card">
+        <div class="level med">MED</div>
+        <h4>LLM API Costs</h4>
+        <p>Per-task costs can kill margins. Mitigation: cache common flows, fine-tune smaller models after traction.</p>
+      </div>
+      <div class="risk-card">
+        <div class="level med">MED</div>
+        <h4>Student Monetization</h4>
+        <p>Students resist paying. Mitigation: freemium + B2B university licensing as parallel revenue.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GO TO MARKET -->
+  <div class="section">
+    <div class="section-label">13 — Go-To-Market Strategy</div>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Phase 1 — Community</h3>
+        <p>Target engineering/medical college students. Post demo on Reddit, LinkedIn, Twitter. 1 viral demo video of the full flow in action. Aim for 500 waitlist signups.</p>
+      </div>
+      <div class="card">
+        <h3>Phase 2 — Direct</h3>
+        <p>Partner with 2-3 college student WhatsApp/Telegram groups. Offer free Pro for referrals. Use college ambassador program. Target Hyderabad/Bangalore colleges first.</p>
+      </div>
+      <div class="card">
+        <h3>Phase 3 — B2B</h3>
+        <p>Pitch universities as a campus AI productivity tool. Target coaching centers (GATE, UPSC, JEE prep). White-label for EdTech companies like Unacademy or PW.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
